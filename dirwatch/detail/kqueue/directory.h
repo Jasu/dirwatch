@@ -30,6 +30,14 @@ namespace dirwatch
          */
         void remove_node(::dirwatch::detail::platform_watcher *watcher, const ::std::string & filename);
 
+        /**
+         * @brief Notifies of deletion recursively.
+         *
+         * It is possible that the deletion message is received for the directory
+         * before its contents. In this case, the content file descriptors will be
+         * closed and the nodes deleted before they receive the event. Therefore
+         * deletion of any remaining child nodes will be notified here.
+         */
         void notify_delete(::dirwatch::detail::platform_watcher *watcher);
 
         /**
@@ -39,6 +47,9 @@ namespace dirwatch
          */
         void scan_additions(::dirwatch::detail::platform_watcher * watcher);
 
+        /**
+         * @return TYPE_DIRECTORY
+         */
         ::dirwatch::detail::node::TYPE get_type() const;
 
       private:
