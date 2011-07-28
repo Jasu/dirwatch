@@ -14,25 +14,22 @@ elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
     detail/kqueue/platform_watcher.cpp
     )
   set(DIRWATCH_PLATFORM_NAME KQUEUE)
+elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
+  set(DIRWATCH_PLATFORM_SOURCES 
+    detail/win32/platform_watcher.cpp
+    )
+  set(DIRWATCH_PLATFORM_NAME WIN32)
 else ()
   message(FATAL_ERROR "Platform not supported.")
 endif ()
   
-
-option(DIRWATCH_IS_SHARED "Compile as dynamic library/shared object?" ON)
-
-if (${DIRWATCH_IS_SHARED} STREQUAL "ON")
-  set (DIRWATCH_LINKAGE SHARED)
-else ()
-  set (DIRWATCH_LINKAGE STATIC)
-endif ()
 
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(
-  dirwatch ${DIRWATCH_LINKAGE}
+  dirwatch STATIC
 
   directory_watcher.cpp
   event_handler.cpp

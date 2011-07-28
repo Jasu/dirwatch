@@ -15,7 +15,7 @@ namespace dirwatch
   /**
    * @brief Watches a directory and its child nodes.
    */
-  class directory_watcher : public boost::noncopyable
+  class directory_watcher
   {
     friend class ::dirwatch::detail::platform_watcher;
     public:

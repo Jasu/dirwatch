@@ -7,9 +7,9 @@ namespace dirwatch
 {
   directory_watcher::directory_watcher(const boost::filesystem::path & directory, unsigned int event_mask)
     : _event_mask(event_mask),
-      _path(directory),
-      _platform_watcher(new detail::platform_watcher(this))
+      _path(directory)
   {
+    _platform_watcher = new detail::platform_watcher(this);
   }
 
   directory_watcher::~directory_watcher()
@@ -47,7 +47,7 @@ namespace dirwatch
 
   void directory_watcher::on_file_contents_changed(const ::boost::filesystem::path & target)
   {
-    if (!_event_mask & event_mask::file_contents_changed)
+    if (!(_event_mask & event_mask::file_contents_changed))
       return;
 
     for (std::vector<event_handler*>::iterator it = _event_handlers.begin();
@@ -59,7 +59,7 @@ namespace dirwatch
 
   void directory_watcher::on_node_attributes_changed(const ::boost::filesystem::path & target)
   {
-    if (!_event_mask & event_mask::node_attributes_changed)
+    if (!(_event_mask & event_mask::node_attributes_changed))
       return;
 
     for (std::vector<event_handler*>::iterator it = _event_handlers.begin();
@@ -71,7 +71,7 @@ namespace dirwatch
 
   void directory_watcher::on_node_deleted(const ::boost::filesystem::path & target)
   {
-    if (!_event_mask & event_mask::node_deleted)
+    if (!(_event_mask & event_mask::node_deleted))
       return;
 
     for (std::vector<event_handler*>::iterator it = _event_handlers.begin();
@@ -83,7 +83,7 @@ namespace dirwatch
 
   void directory_watcher::on_node_created(const ::boost::filesystem::path & target)
   {
-    if (!_event_mask & event_mask::node_created)
+    if (!(_event_mask & event_mask::node_created))
       return;
 
     for (std::vector<event_handler*>::iterator it = _event_handlers.begin();

@@ -6,8 +6,9 @@
 #include <iostream>
 #include <boost/filesystem/path.hpp>
 #include <dirwatch/dirwatch.h>
-#include <unistd.h>
 #include <stdlib.h>
+
+#include "platform.h"
 
 class dw_event_handler : public dirwatch::event_handler
 {
@@ -45,10 +46,7 @@ int main(int argc, char ** argv)
   }
   else
   {
-    char * wd = (char*)malloc(4096);
-    getcwd(wd, 4096);
-    p = wd;
-    free(wd);
+    p = platform::get_cwd();
   }
   dw_event_handler handler;
   dirwatch::directory_watcher watcher(p);

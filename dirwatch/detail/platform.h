@@ -6,6 +6,8 @@
 # include "kqueue/platform_watcher.h"
 # include "kqueue/directory.h"
 # include "kqueue/node.h"
+#elif defined(DIRWATCH_PLATFORM_WIN32)
+# include "win32/platform_watcher.h"
 #elif defined(DIRWATCH_PLATFORM_NULL)
 # include "null/platform_watcher.h"
 #else
