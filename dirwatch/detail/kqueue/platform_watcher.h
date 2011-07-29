@@ -2,6 +2,8 @@
 #define DIRWATCH__DETAIL__KQUEUE__PLATFORM_WATCHER_H
 
 #include <boost/filesystem/path.hpp>
+#include "../message_creation_visitor.h"
+#include "../message_deletion_visitor.h"
 
 namespace dirwatch
 {
@@ -11,22 +13,31 @@ namespace dirwatch
   {
     class node;
     class directory;
+    class open_node_visitor;
 
     class platform_watcher
     {
+      friend class ::dirwatch::detail::open_node_visitor;
       public:
+        /**
+         * @brief Opens the kqueue and starts listening for events.
+         */
         platform_watcher(::dirwatch::directory_watcher * watcher);
+
+        /**
+         * @brief Closes the kqueue.
+         */
         ~platform_watcher();
 
         /**
-         * @brief Starts listening for events on node.
+         * @brief Scans a directory for any files not present in n and adds them.
          *
-         * When the file descriptor of n is closed, the event is automatically removed by kqueue.
+         * Also sends addition events.
          */
-        void add_node(::dirwatch::detail::node * n);
+        void scan_additions(::dirwatch::detail::directory * n);
+
         void watch();
-        void trigger_add_event(::dirwatch::detail::node * n);
-        void trigger_delete_event(::dirwatch::detail::node * n);
+
         const ::boost::filesystem::path & get_path() const;
       private:
 
@@ -37,6 +48,14 @@ namespace dirwatch
 
         ::dirwatch::detail::directory * _root;
         ::dirwatch::directory_watcher * _directory_watcher;
+
+        ::dirwatch::detail::message_creation_visitor _message_creation_visitor;
+        ::dirwatch::detail::message_deletion_visitor _message_deletion_visitor;
+
+        /**
+         * @brief Gets the file descriptor of the open kqueue.
+         */
+        int get_kqueue();
     };
   }
 }

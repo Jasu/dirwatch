@@ -1,7 +1,7 @@
 #include "directory_watcher.h"
 #include "event_mask.h"
 #include "event_handler.h"
-#include "detail/platform.h"
+#include "detail/platform_watcher.h"
 
 namespace dirwatch
 {

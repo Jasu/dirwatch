@@ -1,30 +1,20 @@
 #include "node.h"
+
 #include "directory.h"
-#include "platform_watcher.h"
-
-#include <fcntl.h>
-
+#include "node_visitor.h"
 
 namespace dirwatch
 {
   namespace detail
   {
-    node::node(platform_watcher * watcher, const boost::filesystem::path & path, directory * parent)
+    node::node(const boost::filesystem::path & path, directory * parent)
       : _parent(parent),
         _filename(path.filename().string())
     {
-      _file_descriptor = open(path.string().c_str(), O_EVTONLY, 0);
-      watcher->add_node(this);
     }
-
-    void node::notify_delete(platform_watcher *watcher)
-    {
-      watcher->trigger_delete_event(this);
-    }
-
+ 
     node::~node()
     {
-      close(_file_descriptor);
     }
 
     node::TYPE node::get_type() const
@@ -35,11 +25,6 @@ namespace dirwatch
     directory * node::get_parent() const
     {
       return _parent;
-    }
-
-    int node::get_file_descriptor()
-    {
-      return _file_descriptor;
     }
 
     std::string node::get_filename() const
@@ -59,6 +44,28 @@ namespace dirwatch
         return "";
       }
     }
+
+    void node::accept_preorder(::dirwatch::detail::node_visitor * visitor)
+    {
+      visitor->visit(this);
+    }
+
+    void node::accept_postorder(::dirwatch::detail::node_visitor * visitor)
+    {
+      visitor->visit(this);
+    }
+
+#ifdef DIRWATCH_PLATFORM_KQUEUE
+    void node::set_file_descriptor(int fd)
+    {
+      _file_descriptor = fd;
+    }
+
+    int node::get_file_descriptor()
+    {
+      return _file_descriptor;
+    }
+#endif
   }
 }
 

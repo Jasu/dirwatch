@@ -9,8 +9,8 @@ if ("${DIRWATCH_PLATFORM}" STREQUAL "null")
   set(DIRWATCH_PLATFORM_NAME NULL)
 elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
   set(DIRWATCH_PLATFORM_SOURCES 
-    detail/kqueue/node.cpp
-    detail/kqueue/directory.cpp
+    detail/kqueue/open_node_visitor.cpp
+    detail/kqueue/close_node_visitor.cpp
     detail/kqueue/platform_watcher.cpp
     )
   set(DIRWATCH_PLATFORM_NAME KQUEUE)
@@ -33,6 +33,11 @@ add_library(
 
   directory_watcher.cpp
   event_handler.cpp
+
+  detail/node.cpp
+  detail/directory.cpp
+  detail/message_creation_visitor.cpp
+  detail/message_deletion_visitor.cpp
 
   ${DIRWATCH_PLATFORM_SOURCES}
 )

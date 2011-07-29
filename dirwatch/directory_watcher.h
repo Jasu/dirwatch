@@ -10,14 +10,18 @@ namespace dirwatch
   namespace detail
   {
     class platform_watcher;
+    class message_deletion_visitor;
+    class message_creation_visitor;
   }
   class event_handler;
   /**
    * @brief Watches a directory and its child nodes.
    */
-  class directory_watcher
+  class directory_watcher : boost::noncopyable
   {
     friend class ::dirwatch::detail::platform_watcher;
+    friend class ::dirwatch::detail::message_deletion_visitor;
+    friend class ::dirwatch::detail::message_creation_visitor;
     public:
       /**
        * @param directory Path to the directory being watched.

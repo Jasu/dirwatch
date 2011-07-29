@@ -8,7 +8,7 @@ namespace dirwatch
 {
   namespace detail
   {
-    class platform_watcher;
+    class node_visitor;
     class directory;
 
     class node
@@ -22,12 +22,14 @@ namespace dirwatch
            * @todo support symlinks
            */
         };
+      protected:
+        mutable ::dirwatch::detail::directory * _parent;
+        ::std::string _filename;
+      public:
 
-        node(::dirwatch::detail::platform_watcher * watcher, const ::boost::filesystem::path & path, ::dirwatch::detail::directory * parent = NULL);
+        node(const ::boost::filesystem::path & path, ::dirwatch::detail::directory * parent = NULL);
 
         virtual ~node();
-
-        void notify_delete(::dirwatch::detail::platform_watcher *watcher);
 
         /**
          * @brief Returns node type.
@@ -35,16 +37,14 @@ namespace dirwatch
          * For node, returns TYPE_FILE.
          */
         virtual ::dirwatch::detail::node::TYPE get_type() const;
+
         /**
          * @brief Returns parent node or NULL.
          *
          * For the directory being monitored, returns NULL.
          */
         ::dirwatch::detail::directory * get_parent() const;
-        /**
-         * @brief Returns the file descriptor.
-         */
-        int get_file_descriptor();
+
         /**
          * @brief Returns the filename (not full path).
          */
@@ -55,10 +55,23 @@ namespace dirwatch
          * The created root node is the directory being watched, not necessarily the filesystem root.
          */
         ::boost::filesystem::path get_path() const;
-      protected:
-        mutable ::dirwatch::detail::directory * _parent;
+
+        /**
+         * @brief Visits node and all the descendants.
+         */
+        virtual void accept_preorder(::dirwatch::detail::node_visitor * visitor);
+        /**
+         * @brief Visits all descendants and the node.
+         */
+        virtual void accept_postorder(::dirwatch::detail::node_visitor * visitor);
+
+#ifdef DIRWATCH_PLATFORM_KQUEUE
+      public:
+        void set_file_descriptor(int fd);
+        int get_file_descriptor();
+      private:
         int _file_descriptor;
-        ::std::string _filename;
+#endif
     };
   }
 }

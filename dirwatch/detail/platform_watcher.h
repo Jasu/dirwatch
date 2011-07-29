@@ -1,11 +1,9 @@
-#ifndef DIRWATCH__DETAIL__PLATFORM_H
-#define DIRWATCH__DETAIL__PLATFORM_H
+#ifndef DIRWATCH__DETAIL__PLATFORM_WATCHER_H
+#define DIRWATCH__DETAIL__PLATFORM_WATCHER_H
 
 //Platform macros set in CMakeLists
 #ifdef DIRWATCH_PLATFORM_KQUEUE
 # include "kqueue/platform_watcher.h"
-# include "kqueue/directory.h"
-# include "kqueue/node.h"
 #elif defined(DIRWATCH_PLATFORM_WIN32)
 # include "win32/platform_watcher.h"
 #elif defined(DIRWATCH_PLATFORM_NULL)
