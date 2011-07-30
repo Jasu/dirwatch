@@ -71,6 +71,23 @@ namespace dirwatch
         int get_file_descriptor();
       private:
         int _file_descriptor;
+#elif defined(DIRWATCH_PLATFORM_INOTIFY)
+      public:
+        //inotify sends 2 kinds of events: 
+        // - File modified on each write
+        // - File attributes changed on each attr change
+        // - File write close when closed for writing.
+        //
+        // To match semantics of other platforms,
+        // only send events when the file is closed.
+        bool was_content_modified();
+        void set_was_content_modified(bool was_modified);
+
+        bool were_attributes_modified();
+        void set_were_attributes_modified(bool were_attributes_modified);
+      private:
+        bool _was_content_modified;
+        bool _were_attributes_modified;
 #endif
     };
   }

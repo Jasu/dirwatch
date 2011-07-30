@@ -65,6 +65,24 @@ namespace dirwatch
     {
       return _file_descriptor;
     }
+#elif defined(DIRWATCH_PLATFORM_INOTIFY)
+    bool node::was_content_modified()
+    {
+      return _was_content_modified;
+    }
+    void node::set_was_content_modified(bool was_modified)
+    {
+      _was_content_modified = was_modified;
+    }
+
+    bool node::were_attributes_modified()
+    {
+      return _were_attributes_modified;
+    }
+    void node::set_were_attributes_modified(bool were_attributes_modified)
+    {
+      _were_attributes_modified = were_attributes_modified;
+    }
 #endif
   }
 }

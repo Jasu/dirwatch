@@ -42,9 +42,29 @@ namespace dirwatch
          * @brief Adds a child to the tree.
          * @return The child node added.
          */
+        node * add_child(const ::boost::filesystem::path & child);
+
+        /**
+         * @brief Adds a child to the tree.
+         * @return The child node added.
+         */
         node * add_child(const ::boost::filesystem::directory_entry & child);
+
       private:
         ::boost::ptr_map< ::std::string, ::dirwatch::detail::node> _children;
+#ifdef DIRWATCH_PLATFORM_INOTIFY
+      public:
+        /**
+         * @brief Gets the inotify watch descriptor of the directory.
+         */
+        int get_watch_descriptor();
+        /**
+         * @brief Sets the inotify watch descriptor of the directory.
+         */
+        void set_watch_descriptor(int wd); 
+      private:
+        int _watch_descriptor;
+#endif
     };
   }
 }

@@ -53,7 +53,7 @@ namespace dirwatch
     for (std::vector<event_handler*>::iterator it = _event_handlers.begin();
         it != _event_handlers.end(); ++it)
     {
-      (*it)->on_file_contents_changed(this, target);
+      (*it)->on_file_contents_changed(this, _path / target);
     }
   }
 
@@ -65,7 +65,7 @@ namespace dirwatch
     for (std::vector<event_handler*>::iterator it = _event_handlers.begin();
         it != _event_handlers.end(); ++it)
     {
-      (*it)->on_node_attributes_changed(this, target);
+      (*it)->on_node_attributes_changed(this, _path / target);
     }
   }
 
@@ -77,7 +77,7 @@ namespace dirwatch
     for (std::vector<event_handler*>::iterator it = _event_handlers.begin();
         it != _event_handlers.end(); ++it)
     {
-      (*it)->on_node_deleted(this, target);
+      (*it)->on_node_deleted(this, _path / target);
     }
   }
 
@@ -89,7 +89,7 @@ namespace dirwatch
     for (std::vector<event_handler*>::iterator it = _event_handlers.begin();
         it != _event_handlers.end(); ++it)
     {
-      (*it)->on_node_created(this, target);
+      (*it)->on_node_created(this, _path / target);
     }
   }
 }

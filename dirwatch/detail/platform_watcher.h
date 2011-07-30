@@ -2,7 +2,9 @@
 #define DIRWATCH__DETAIL__PLATFORM_WATCHER_H
 
 //Platform macros set in CMakeLists
-#ifdef DIRWATCH_PLATFORM_KQUEUE
+#ifdef DIRWATCH_PLATFORM_INOTIFY
+# include "inotify/platform_watcher.h"
+#elif defined(DIRWATCH_PLATFORM_KQUEUE)
 # include "kqueue/platform_watcher.h"
 #elif defined(DIRWATCH_PLATFORM_WIN32)
 # include "win32/platform_watcher.h"

@@ -55,6 +55,11 @@ namespace dirwatch
       return it->second;
     }
 
+    node * directory::add_child(const boost::filesystem::path & path)
+    {
+      return add_child(boost::filesystem::directory_entry(path));
+    }
+
     node * directory::add_child(const boost::filesystem::directory_entry & entry)
     {
       const boost::filesystem::path & subpath = entry.path();
@@ -91,11 +96,22 @@ namespace dirwatch
         default:
           BOOST_THROW_EXCEPTION(exception::exception() << exception::error_message_info("Unknown file type when iterating."));
       }
-
       std::string filename = subpath.filename().string();
       _children.insert(filename, n);
       return n;
     }
+
+#ifdef DIRWATCH_PLATFORM_INOTIFY
+    int directory::get_watch_descriptor()
+    {
+      return _watch_descriptor;
+    }
+
+    void directory::set_watch_descriptor(int wd)
+    {
+      _watch_descriptor = wd;
+    }
+#endif
   }
 }
 

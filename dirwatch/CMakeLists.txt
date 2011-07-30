@@ -7,6 +7,13 @@ if ("${DIRWATCH_PLATFORM}" STREQUAL "null")
     detail/null/platform_watcher.cpp
     )
   set(DIRWATCH_PLATFORM_NAME NULL)
+elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+  set(DIRWATCH_PLATFORM_SOURCES 
+    detail/inotify/open_node_visitor.cpp
+    detail/inotify/close_node_visitor.cpp
+    detail/inotify/platform_watcher.cpp
+    )
+  set(DIRWATCH_PLATFORM_NAME INOTIFY)
 elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
   set(DIRWATCH_PLATFORM_SOURCES 
     detail/kqueue/open_node_visitor.cpp
@@ -24,9 +31,14 @@ else ()
 endif ()
   
 
+set(Boost_ADDITIONAL_VERSIONS "1.47" "1.47.0")
+if ("${BOOST_ROOT}" STREQUAL "" AND EXISTS ${CMAKE_SOURCE_DIR}/lib/boost_1_47_0)
+  set(BOOST_ROOT ${CMAKE_SOURCE_DIR}/lib/boost_1_47_0)
+  set(Boost_NO_SYSTEM_PATHS ON)
+endif()
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS filesystem system)
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIR})
 
 add_library(
   dirwatch STATIC
